@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title  %} {{ post.title_tag }} {% endblock  %}
+{% block  content %}
+
+    <h1>{{ post.title }} </h1>
+    <p>By: {{ post.author.first_name}} 
+        {{ post.author.last_name}} - {{ post.category }} <br> -
+        {{ post.post_date}}  
+        {% if user.is_authenticated %}
+            {% if user.id == post.author.id %}
+                -<small> <a href="{% url 'update_post' post.pk %}" >Edit </a> </small>
+                <small>  <a href="{% url 'delete_post' post.pk %}" >Delete </a> </small> <br>
+            {% endif %}
+            
+        {% endif %}
+       <br> {{ post.body|safe }}
+       <br><br><a href="{% url 'home' %}" class="btn btn-secondary"> Back </a>
+       <br><br>    
+       <hr>
+       <br/>
+       <form action="{% url 'like_post' post.pk %}" method="POST" >
+          {% csrf_token %} 
+          <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like </button> -{{total_likes}} likes
+       </form>
+
+
+{% endblock %}
